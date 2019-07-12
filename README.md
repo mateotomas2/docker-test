@@ -25,7 +25,7 @@ Now you can start development server with:
 
 ## Other commands:
 
-Clean aragon, ipfs and node_modules :
+Clean aragon, ipfs and node_modules:
 
 `make clean`
 
@@ -36,7 +36,7 @@ It saves ipfs to .ipfs folder, and aragon in .aragon folder inside this same rep
 
 You don't need to publish, unless you want to update the smart contracts.
 
-Folder of the project can be changed inside Makefile
+Folder of the project can be changed inside .env file.
 
 The following libraries are downloaded globally on docker build and linked on install. This means, you will not need to install them again ever, unless you delete the docker images cache.
 

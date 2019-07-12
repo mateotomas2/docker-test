@@ -1,0 +1,111 @@
+version: '3.4'
+services:
+  devchain:
+    image: aragon-image
+    network_mode: host
+    build:
+      context: ./aragon-image
+    depends_on:
+      - ipfs
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./entrypoint:/home/node/entrypoint
+      - .aragon:/home/node/.aragon
+    user: '1000'
+    ports:
+      - 8545:8545
+    entrypoint: /home/node/entrypoint/devchain/docker-entrypoint.sh
+  aragon:
+    image: aragon-image
+    network_mode: host
+    depends_on:
+      - ipfs
+      - devchain
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./entrypoint:/home/node/entrypoint
+      - ./.aragon:/home/node/.aragon
+    user: '1000'
+    ports:
+      - 3000:3000
+    command: [/home/node/entrypoint/aragon/docker-entrypoint.sh]
+
+  suite:
+    image: aragon-image
+    network_mode: host
+    depends_on:
+      - ipfs
+      - devchain
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./entrypoint:/home/node/entrypoint
+      - ./.aragon:/home/node/.aragon
+    user: '1000'
+    ports:
+      - 1110:1110
+      - 1111:1111
+      - 2220:2220
+      - 2222:2222
+      - 3330:3330
+      - 3333:3333
+      - 4440:4440
+      - 4444:4444
+      - 5550:5550
+      - 5555:5555
+      - 3001:3001
+      - 3002:3002
+      - 3003:3003
+    entrypoint: /home/node/entrypoint/suite/docker-entrypoint.sh
+
+  ipfs:
+    image: ipfs/go-ipfs
+    network_mode: host
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./entrypoint:/home/node/entrypoint
+      - .ipfs:/home/node/.ipfs
+    user: '1000'
+    ports:
+      - 5001:5001
+      - 4001:4001
+      - 8080:8080
+      - 8081:8081
+      - 4002:4002
+
+
+  workspace:
+    image: aragon-image
+    network_mode: host
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./.aragon:/home/node/.aragon
+      - ./entrypoint:/home/node/entrypoint
+    depends_on:
+      - ipfs
+      - devchain
+    working_dir: /home/node/app
+    entrypoint: /home/node/entrypoint/workspace/docker-entrypoint.sh
+    user: '1000'
+
+  commands:
+    image: aragon-image
+    network_mode: host
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./.aragon:/home/node/.aragon
+      - ./entrypoint:/home/node/entrypoint
+    working_dir: /home/node/app
+    entrypoint: /home/node/entrypoint/commands/docker-entrypoint.sh
+    user: '1000'
+
+  storage:
+    image: aragon-image
+    network_mode: host
+    volumes:
+      - ${APP_VOLUME}:/home/node/app
+      - ./.aragon:/home/node/.aragon
+      - ./.aragon-storage:/home/node/aragon-storage
+      - ./entrypoint:/home/node/entrypoint
+    working_dir: /home/node/app
+    entrypoint: /home/node/entrypoint/storage/docker-entrypoint.sh
+    user: '1000'

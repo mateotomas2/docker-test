@@ -92,9 +92,9 @@ clean-docker:
 	docker system prune --all --force
 
 clone:
-	source .env 
-	# sudo rm -r ${APP_VOLUME}
-	git clone git@github.com:AutarkLabs/planning-suite.git ${APP_VOLUME}
+	source .env && \
+	rm -rf $${APP_VOLUME} && \
+	git clone git@github.com:AutarkLabs/planning-suite.git $${APP_VOLUME}
 
 # Experimental, this changes aragon client version:
 aragon-deeplinking:
